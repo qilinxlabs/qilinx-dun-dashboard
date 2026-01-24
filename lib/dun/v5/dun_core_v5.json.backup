@@ -1,0 +1,286 @@
+{
+  "version": "0.1.0",
+  "name": "dun_core_v5",
+  "instructions": [
+    {
+      "name": "createPaymentRequest",
+      "accounts": [
+        {
+          "name": "payee",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "paymentRequest",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        },
+        {
+          "name": "expiresIn",
+          "type": "i64"
+        },
+        {
+          "name": "metadataHash",
+          "type": {
+            "option": {
+              "array": ["u8", 32]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "privacyTransfer",
+      "accounts": [
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "payerTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "poolVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "vaultAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "commitmentAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "paymentRequest",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payeeTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "commitment",
+          "type": {
+            "array": ["u8", 32]
+          }
+        }
+      ]
+    },
+    {
+      "name": "cancelPaymentRequest",
+      "accounts": [
+        {
+          "name": "payee",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "paymentRequest",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [
+    {
+      "name": "PaymentRequest",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "requestId",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "payee",
+            "type": "publicKey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "status",
+            "type": {
+              "defined": "PaymentStatus"
+            }
+          },
+          {
+            "name": "createdAt",
+            "type": "i64"
+          },
+          {
+            "name": "expiresAt",
+            "type": "i64"
+          },
+          {
+            "name": "paidAt",
+            "type": {
+              "option": "i64"
+            }
+          },
+          {
+            "name": "metadataHash",
+            "type": {
+              "option": {
+                "array": ["u8", 32]
+              }
+            }
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "CommitmentAccount",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "commitment",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "tokenMint",
+            "type": "publicKey"
+          },
+          {
+            "name": "createdAt",
+            "type": "i64"
+          },
+          {
+            "name": "isSpent",
+            "type": "bool"
+          }
+        ]
+      }
+    }
+  ],
+  "types": [
+    {
+      "name": "PaymentStatus",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Pending"
+          },
+          {
+            "name": "Paid"
+          },
+          {
+            "name": "Expired"
+          },
+          {
+            "name": "Cancelled"
+          }
+        ]
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "PaymentCompleted",
+      "fields": [
+        {
+          "name": "requestId",
+          "type": {
+            "array": ["u8", 32]
+          },
+          "index": false
+        },
+        {
+          "name": "payee",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "amount",
+          "type": "u64",
+          "index": false
+        },
+        {
+          "name": "paidAt",
+          "type": "i64",
+          "index": false
+        }
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "InvalidAmount",
+      "msg": "Amount must be one of COMMON_AMOUNTS"
+    },
+    {
+      "code": 6001,
+      "name": "InvalidExpiration",
+      "msg": "Expiration time must be positive"
+    },
+    {
+      "code": 6002,
+      "name": "PaymentRequestNotPending",
+      "msg": "Payment request is not pending"
+    },
+    {
+      "code": 6003,
+      "name": "PaymentRequestExpired",
+      "msg": "Payment request has expired"
+    },
+    {
+      "code": 6004,
+      "name": "Unauthorized",
+      "msg": "Unauthorized"
+    }
+  ],
+  "metadata": {
+    "address": "972EkHPNpRyp9BW1G3Gj9WRGnR3bLNJt4T7EtjxdfaN7"
+  }
+}

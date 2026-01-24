@@ -1,0 +1,299 @@
+{
+  "address": "972EkHPNpRyp9BW1G3Gj9WRGnR3bLNJt4T7EtjxdfaN7",
+  "metadata": {
+    "name": "dun_core_v5",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Dun V5: x402 Privacy Transfer Protocol"
+  },
+  "instructions": [
+    {
+      "name": "createPaymentRequest",
+      "discriminator": [246, 150, 103, 37, 15, 36, 93, 100],
+      "accounts": [
+        {
+          "name": "payee",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "paymentRequest",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [112, 97, 121, 109, 101, 110, 116, 95, 114, 101, 113, 117, 101, 115, 116]
+              },
+              {
+                "kind": "account",
+                "path": "payee"
+              },
+              {
+                "kind": "arg",
+                "path": "amount"
+              },
+              {
+                "kind": "arg",
+                "path": "timestamp"
+              }
+            ]
+          }
+        },
+        {
+          "name": "systemProgram"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        },
+        {
+          "name": "expiresIn",
+          "type": "i64"
+        },
+        {
+          "name": "timestamp",
+          "type": "i64"
+        },
+        {
+          "name": "metadataHash",
+          "type": {
+            "option": {
+              "array": ["u8", 32]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "privacyTransfer",
+      "discriminator": [128, 167, 154, 98, 148, 229, 152, 145],
+      "accounts": [
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "payerTokenAccount",
+          "writable": true
+        },
+        {
+          "name": "poolVault",
+          "writable": true
+        },
+        {
+          "name": "tokenMint"
+        },
+        {
+          "name": "vaultAuthority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [118, 97, 117, 108, 116, 95, 97, 117, 116, 104, 111, 114, 105, 116, 121]
+              }
+            ]
+          }
+        },
+        {
+          "name": "commitmentAccount",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [99, 111, 109, 109, 105, 116, 109, 101, 110, 116]
+              },
+              {
+                "kind": "arg",
+                "path": "commitment"
+              }
+            ]
+          }
+        },
+        {
+          "name": "paymentRequest",
+          "writable": true
+        },
+        {
+          "name": "payeeTokenAccount",
+          "writable": true
+        },
+        {
+          "name": "tokenProgram"
+        },
+        {
+          "name": "systemProgram"
+        }
+      ],
+      "args": [
+        {
+          "name": "commitment",
+          "type": {
+            "array": ["u8", 32]
+          }
+        }
+      ]
+    },
+    {
+      "name": "cancelPaymentRequest",
+      "discriminator": [246, 129, 93, 79, 189, 140, 84, 7],
+      "accounts": [
+        {
+          "name": "payee",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "paymentRequest",
+          "writable": true
+        }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [
+    {
+      "name": "PaymentRequest",
+      "discriminator": [27, 20, 202, 96, 101, 242, 124, 69]
+    },
+    {
+      "name": "CommitmentAccount",
+      "discriminator": [155, 206, 108, 147, 168, 110, 100, 181]
+    }
+  ],
+  "types": [
+    {
+      "name": "PaymentRequest",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "requestId",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "payee",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "status",
+            "type": {
+              "defined": {
+                "name": "PaymentStatus"
+              }
+            }
+          },
+          {
+            "name": "createdAt",
+            "type": "i64"
+          },
+          {
+            "name": "expiresAt",
+            "type": "i64"
+          },
+          {
+            "name": "paidAt",
+            "type": {
+              "option": "i64"
+            }
+          },
+          {
+            "name": "metadataHash",
+            "type": {
+              "option": {
+                "array": ["u8", 32]
+              }
+            }
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "CommitmentAccount",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "commitment",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "tokenMint",
+            "type": "pubkey"
+          },
+          {
+            "name": "createdAt",
+            "type": "i64"
+          },
+          {
+            "name": "isSpent",
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "PaymentStatus",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Pending"
+          },
+          {
+            "name": "Paid"
+          },
+          {
+            "name": "Expired"
+          },
+          {
+            "name": "Cancelled"
+          }
+        ]
+      }
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "InvalidAmount",
+      "msg": "Amount must be one of COMMON_AMOUNTS"
+    },
+    {
+      "code": 6001,
+      "name": "InvalidExpiration",
+      "msg": "Expiration time must be positive"
+    },
+    {
+      "code": 6002,
+      "name": "PaymentRequestNotPending",
+      "msg": "Payment request is not pending"
+    },
+    {
+      "code": 6003,
+      "name": "PaymentRequestExpired",
+      "msg": "Payment request has expired"
+    },
+    {
+      "code": 6004,
+      "name": "Unauthorized",
+      "msg": "Unauthorized"
+    }
+  ]
+}

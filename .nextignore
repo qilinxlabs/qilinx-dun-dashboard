@@ -1,0 +1,34 @@
+dun-protocol/sdk/test/**
+dun-protocol/programs/**
+dun-protocol/scripts/**
+dun-protocol/circuits/**
+dun-protocol/target/**
+dun-protocol-public/**
+qilinx-dun-protocol/**
+**/*.test.ts
+**/*.test.tsx
+**/*.test.js
+**/*.spec.ts
+**/*.spec.tsx
+**/*.spec.js
+**/Anchor.toml
+**/*.rs
+**/*.toml
+**/*.so
+
+# Exclude entire program folder
+program/**
+!program/sdk/**
+!program/idl/**
+
+# Exclude documentation and specs (not needed for runtime)
+.kiro/**
+artifacts/**
+cache/**
+tests/**
+
+# Exclude build artifacts
+*.log
+.DS_Store
+.turbo
+.vercel
