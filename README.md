@@ -2,7 +2,9 @@
 
 A privacy-preserving payment protocol on Solana using zero-knowledge proofs for shielded transactions.
 
-🚀 **[Live Demo](https://qilinx-dun.vercel.app/)** | 📖 **[Documentation](https://bo0.gitbook.io/dun-protocol)**
+🚀 **[Live Demo](https://qilinx-dun.vercel.app/)** | 📖 **[Documentation](https://bo0.gitbook.io/dun-protocol)** | 🎥 **[Video Demo](https://youtu.be/LfHkOXI1sdw)**
+
+📦 **[Dun Protocol Repository](https://github.com/qilinxlabs/qilinx-dun-protocol)** | 🤖 **[Dun MCP Repository](https://github.com/qilinxlabs/qilinx-dun-mcp)**
 
 ## What is Dun?
 
